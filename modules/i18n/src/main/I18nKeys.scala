@@ -2116,6 +2116,7 @@ object I18nKeys:
     val `improvementAreas` = I18nKey("puzzle:improvementAreas")
     val `strengths` = I18nKey("puzzle:strengths")
     val `history` = I18nKey("puzzle:history")
+    val `sets` = I18nKey("puzzle:sets")
     val `solved` = I18nKey("puzzle:solved")
     val `failed` = I18nKey("puzzle:failed")
     val `streakDescription` = I18nKey("puzzle:streakDescription")

@@ -62,7 +62,10 @@ object bits:
       ),
       a(cls := active.active("player"), href := routes.Puzzle.ofPlayer())(
         trans.puzzle.fromMyGames()
-      )
+      ),
+      a(cls := active.active("sets"), href := routes.Puzzle.puzzleSets(1, u))(
+        trans.puzzle.sets()
+      ),
     )
 
   private val baseI18nKeys = List(

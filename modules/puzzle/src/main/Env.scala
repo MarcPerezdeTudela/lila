@@ -79,6 +79,8 @@ final class Env(
 
   lazy val history = wire[PuzzleHistoryApi]
 
+  lazy val sets = wire[PuzzleHistoryApi]
+
   lazy val streak = wire[PuzzleStreakApi]
 
   lazy val opening = wire[PuzzleOpeningApi]

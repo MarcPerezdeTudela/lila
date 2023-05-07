@@ -472,6 +472,15 @@ final class Puzzle(env: Env, apiC: => Api) extends LilaController(env):
       }
     }
 
+  def puzzleSets(page: Int, u: Option[UserStr]) =
+    DashboardPage(u) { implicit ctx => user =>
+      Reasonable(page) {
+        env.puzzle.sets(user, page) map { sets =>
+          Ok(views.html.puzzle.sets(user))
+        }
+      }
+    }
+
   def apiBatchSelect(angleStr: String) = AnonOrScoped(_.Puzzle.Read) { implicit req => me =>
     batchSelect(me, PuzzleAngle findOrMix angleStr, reqDifficulty, getInt("nb", req) | 15).dmap(Ok.apply)
   }
