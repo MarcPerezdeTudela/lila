@@ -27,7 +27,7 @@ object history:
         div(cls := "page-menu__content box box-pad")(
           h1(cls := "box__top")(title),
           div(cls := "puzzle-history")(
-            div(cls := "infinite-scroll")(
+            div(cls := "infinite-scroll1")(
               pager.currentPageResults map renderSession,
               pagerNext(pager, np => routes.Puzzle.history(np, user.username.some).url)
             )
