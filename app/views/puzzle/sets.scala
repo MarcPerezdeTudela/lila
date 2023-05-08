@@ -27,7 +27,6 @@ object sets:
         div(cls := "page-menu__content box box-pad")(
           h1(cls := "box__top")(title),
           div(cls := "puzzle-sets")(
-            
             div(cls := "infinite-scroll")(
             )
           )
