@@ -1,4 +1,4 @@
 {
   "*.{js,ts,json,md}": "pnpm run format",
-  "*.scala": "sbt scalafmt"
+  "*.scala": "sbt scalafmtOnly"
 }
