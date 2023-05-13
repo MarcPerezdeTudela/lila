@@ -146,7 +146,7 @@ GET   /training/dashboard/$days<\d+>   controllers.Puzzle.dashboard(days: Int, p
 GET   /training/dashboard/$days<\d+>/:path  controllers.Puzzle.dashboard(days: Int, path, u: Option[String])
 GET   /training/replay/$days<\d+>/:theme controllers.Puzzle.replay(days: Int, theme)
 GET   /training/history                controllers.Puzzle.history(page: Int ?= 1, u: Option[String])
-GET   /training/puzzle-sets            controllers.Puzzle.puzzleSets(page: Int ?= 1, u: Option[String])
+GET   /training/puzzle-sets            controllers.Puzzle.sets(page: Int ?= 1, u: Option[String])
 GET   /training/mobile/history         controllers.Puzzle.mobileHistory(page: Int ?= 1)
 GET   /training/batch                  controllers.Puzzle.mobileBcBatchSelect
 POST  /training/batch                  controllers.Puzzle.mobileBcBatchSolve

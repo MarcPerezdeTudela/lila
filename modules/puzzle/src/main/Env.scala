@@ -12,7 +12,8 @@ private class PuzzleConfig(
     @ConfigName("mongodb.uri") val mongoUri: String,
     @ConfigName("collection.puzzle") val puzzleColl: CollName,
     @ConfigName("collection.round") val roundColl: CollName,
-    @ConfigName("collection.path") val pathColl: CollName
+    @ConfigName("collection.path") val pathColl: CollName,
+    @ConfigName("collection.set") val setColl: CollName
 )
 
 @Module
@@ -42,7 +43,8 @@ final class Env(
   lazy val colls = new PuzzleColls(
     puzzle = db(config.puzzleColl),
     round = db(config.roundColl),
-    path = db(config.pathColl)
+    path = db(config.pathColl),
+    set = db(config.setColl)
   )
 
   private lazy val gameJson: GameJson = wire[GameJson]
@@ -79,7 +81,7 @@ final class Env(
 
   lazy val history = wire[PuzzleHistoryApi]
 
-  lazy val sets = wire[PuzzleHistoryApi]
+  lazy val sets = wire[PuzzleSetCollectionApi]
 
   lazy val streak = wire[PuzzleStreakApi]
 
@@ -101,5 +103,6 @@ final class Env(
 final class PuzzleColls(
     val puzzle: AsyncColl,
     val round: AsyncColl,
-    val path: AsyncColl
+    val path: AsyncColl,
+    val set: AsyncColl
 )
