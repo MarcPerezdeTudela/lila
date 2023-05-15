@@ -12,63 +12,53 @@ import alleycats.std.set
 
 object PuzzleSetCollection:
 
-    val maxPerPage = MaxPerPage(100)
+  val maxPerPage = MaxPerPage(100)
 
-    case class PuzzleSet(
-        name: String,
-        items: NonEmptyList[PuzzleSetItem]
-    )
+  final class PuzzleSetCollectionAdapter(user: User, colls: PuzzleColls)(using Executor)
+      extends AdapterLike[PuzzleSet]:
 
-    final class PuzzleSetCollectionAdapter(user: User, colls: PuzzleColls)(using Executor) extends AdapterLike[PuzzleSet]:
+    import BsonHandlers.given
 
-        import BsonHandlers.given
+    def nbResults: Fu[Int] = fuccess(user.perfs.puzzle.nb)
 
-        def nbResults: Fu[Int] = fuccess(user.perfs.puzzle.nb)
-
-        def slice(offset: Int, length: Int): Fu[Seq[PuzzleSet]] =
-            colls
-                .set {
-                    _.aggregateList(length, readPreference = ReadPreference.secondaryPreferred) { framework =>
-                        import framework.*
-                        Match($doc("u" -> user.id)) -> List(
-                            Skip(offset),
-                            Limit(length),
-                            PipelineOperator(PuzzleSetItem puzzleLookup colls),
-                            Unwind("puzzle")
-                        )
-                    }
-                }
-                .map { r =>
-                    for {
-                        doc    <- r
-                        id     <- doc.getAsOpt[String](PuzzleSetItem.BSONFields.id)
-                        setName   <- doc.getAsOpt[String](PuzzleSetItem.BSONFields.setName)
-                        user   <- doc.getAsOpt[String](PuzzleSetItem.BSONFields.user)
-                        puzzle <- doc.getAsOpt[Puzzle]("puzzle")
-
-                        _ = println(r)
-                        _ = println("Id: " + id)
-                        _ = println("SetName: " + setName)
-                        _ = println("User: " + user)
-                        _ = println("PuzzleId: " + puzzle.id)
-                    } yield PuzzleSetItem(id, setName, user, puzzle)
-                }.map(groupBySet)
-                
-
-    def groupBySet(setItems: List[PuzzleSetItem]): List[PuzzleSet] =
-            setItems
-                .groupBy(_.setName).map { (setName, items) =>
-                    PuzzleSet(setName, NonEmptyList.fromListUnsafe(items))
-                }.toList
-    
+    def slice(offset: Int, length: Int): Fu[Seq[PuzzleSet]] =
+      colls
+        .set {
+          _.aggregateList(length, readPreference = ReadPreference.secondaryPreferred) { framework =>
+            import framework.*
+            Match($doc("u" -> user.id)) -> List(
+              Skip(offset),
+              Limit(length),
+              PipelineOperator(
+                $doc(
+                  "$lookup" -> $doc(
+                    "from"         -> colls.puzzle.name.value,
+                    "localField"   -> "p",
+                    "foreignField" -> "_id",
+                    "as"           -> "puzzles"
+                  )
+                )
+              )
+            )
+          }
+        }
+        .map { r =>
+          for {
+            doc     <- r
+            id      <- doc.getAsOpt[String](PuzzleSet.BSONFields.id)
+            name    <- doc.getAsOpt[String](PuzzleSet.BSONFields.name)
+            user    <- doc.getAsOpt[String](PuzzleSet.BSONFields.user)
+            puzzles <- doc.getAsOpt[List[Puzzle]]("puzzles")
+          } yield PuzzleSet(id, name, user, puzzles)
+        }
 
 final class PuzzleSetCollectionApi(colls: PuzzleColls)(using Executor):
 
-    import PuzzleSetCollection.*
+  import PuzzleSetCollection.*
 
-    def apply(user: User, page: Int): Fu[Paginator[PuzzleSet]] =
-        Paginator[PuzzleSet](
-            new PuzzleSetCollectionAdapter(user, colls),
-            currentPage = page,
-            maxPerPage = maxPerPage
-        )
+  def apply(user: User, page: Int): Fu[Paginator[PuzzleSet]] =
+    Paginator[PuzzleSet](
+      new PuzzleSetCollectionAdapter(user, colls),
+      currentPage = page,
+      maxPerPage = maxPerPage
+    )

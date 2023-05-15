@@ -65,7 +65,7 @@ object bits:
       ),
       a(cls := active.active("sets"), href := routes.Puzzle.sets(1, u))(
         trans.puzzle.sets()
-      ),
+      )
     )
 
   private val baseI18nKeys = List(
