@@ -7,7 +7,6 @@ import lila.api.Context
 import lila.app.templating.Environment.{ given, * }
 import lila.app.ui.ScalatagsTemplate.{ *, given }
 import lila.common.paginator.Paginator
-import lila.puzzle.PuzzleSetCollection
 import lila.puzzle.PuzzleSet
 import lila.puzzle.Puzzle
 import lila.user.User
