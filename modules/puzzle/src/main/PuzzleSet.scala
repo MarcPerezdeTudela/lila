@@ -1,9 +1,9 @@
 package lila.puzzle
 
 case class PuzzleSet(
-    id: String,
-    name: String,
-    user: String,
+    id: PuzzleSet.Id,
+    name: SetName,
+    user: UserName,
     puzzles: List[Puzzle]
 )
 

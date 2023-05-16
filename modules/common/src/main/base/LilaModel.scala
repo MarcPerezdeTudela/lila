@@ -71,6 +71,9 @@ trait LilaModel:
   opaque type PuzzleId = String
   object PuzzleId extends OpaqueString[PuzzleId]
 
+  opaque type SetName = String
+  object SetName extends OpaqueString[SetName]
+
   opaque type UserTitle = String
   object UserTitle extends OpaqueString[UserTitle]
 

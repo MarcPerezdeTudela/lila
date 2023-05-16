@@ -44,6 +44,16 @@ object BsonHandlers:
     id => BSONString(id.toString)
   )
 
+  private[puzzle] given setIdHandler: BSONHandler[PuzzleSet.Id] = tryHandler[PuzzleSet.Id](
+    { case BSONString(v) =>
+      v split PuzzleSet.idSep match {
+        case Array(userId, setName) => Success(PuzzleSet.Id(UserId(userId), String(setName)))
+        case _                      => handlerBadValue(s"Invalid puzzle set id $v")
+      }
+    },
+    id => BSONString(id.toString)
+  )
+
   private[puzzle] given BSONHandler[PuzzleRound.Theme] = tryHandler[PuzzleRound.Theme](
     { case BSONString(v) =>
       PuzzleTheme

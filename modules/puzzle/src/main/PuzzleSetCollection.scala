@@ -45,9 +45,9 @@ object PuzzleSetCollection:
         .map { r =>
           for {
             doc     <- r
-            id      <- doc.getAsOpt[String](PuzzleSet.BSONFields.id)
-            name    <- doc.getAsOpt[String](PuzzleSet.BSONFields.name)
-            user    <- doc.getAsOpt[String](PuzzleSet.BSONFields.user)
+            id      <- doc.getAsOpt[PuzzleSet.Id](PuzzleSet.BSONFields.id)
+            name    <- doc.getAsOpt[SetName](PuzzleSet.BSONFields.name)
+            user    <- doc.getAsOpt[UserName](PuzzleSet.BSONFields.user)
             puzzles <- doc.getAsOpt[List[Puzzle]]("puzzles")
           } yield PuzzleSet(id, name, user, puzzles)
         }
