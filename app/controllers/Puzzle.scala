@@ -408,7 +408,7 @@ final class Puzzle(env: Env, apiC: => Api) extends LilaController(env):
   }
 
   def sets(page: Int, u: Option[UserStr]) =
-    DashboardPage(u) { implicit ctx => user =>
+    DashboardPage(u) { ctx ?=> user =>
       Reasonable(page) {
         env.puzzle.sets(user, page) map { sets =>
           Ok(views.html.puzzle.sets(user, sets))
