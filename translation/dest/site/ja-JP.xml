@@ -826,6 +826,8 @@
   <string name="useTheReportForm">通報フォームをお使いください</string>
   <string name="toRequestSupport">サポートを求める時には%1$s</string>
   <string name="tryTheContactPage">「連絡先」のページをご覧ください</string>
+  <string name="makeSureToRead" comment="makeSureToRead&#10;&#10;%1$s is 'the forum etiquette'.">%1$s を必ずお読みください</string>
+  <string name="theForumEtiquette" comment="theForumEtiquette&#10;&#10;Part of string 'Make sure to read [the forum etiquette]'">フォーラムでのマナー</string>
   <string name="thisTopicIsArchived">このトピックはすでにアーカイブ化されコメントの追加はできません。</string>
   <string name="joinTheTeamXToPost">投稿するには %1$s に加入してください</string>
   <string name="teamNamedX">%1$s チーム</string>
@@ -909,5 +911,5 @@
   <string name="lichessDbExplanation">Lichess 全プレイヤーのレート戦が対象</string>
   <string name="switchSides">色変更</string>
   <string name="closingAccountWithdrawAppeal">アカウントを閉鎖すると異議申立ても取り下げになります</string>
-  <string name="ourEventTips" comment="ourEventTips&#10;&#10;Tips in the sense of advice.&#10;&#10;A link that leads to https://lichess.org/page/event-tips&#10;&#10;That page describes best practices for events such as tournaments. It includes guidance on configuring the tournament, advertising it, and rules about prizes.">チェスイベント開催のアドバイス</string>
+  <string name="ourEventTips">チェスイベント開催のアドバイス</string>
 </resources>

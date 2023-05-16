@@ -20,7 +20,6 @@ import lila.hub.actorApi.round.{
 import lila.hub.AsyncActor
 import lila.room.RoomSocket.{ Protocol as RP, * }
 import lila.socket.{ Socket, SocketVersion, SocketSend, GetVersion, UserLagCache }
-import lila.user.User
 
 final private[round] class RoundAsyncActor(
     dependencies: RoundAsyncActor.Dependencies,
@@ -168,8 +167,8 @@ final private[round] class RoundAsyncActor(
     case Protocol.In.HoldAlert(fullId, ip, mean, sd) =>
       handle(Game takePlayerId fullId) { pov =>
         gameRepo hasHoldAlert pov flatMap {
-          case true => funit
-          case false =>
+          if _ then funit
+          else
             lila
               .log("cheat")
               .info(
@@ -266,12 +265,12 @@ final private[round] class RoundAsyncActor(
       handle(playerId) { pov =>
         pov.mightClaimWin ?? {
           getPlayer(!pov.color).isLongGone flatMap {
-            case true =>
+            if _ then
               finisher.rageQuit(
                 pov.game,
                 Some(pov.color) ifFalse pov.game.situation.opponentHasInsufficientMaterial
               )
-            case _ => fuccess(List(Event.Reload))
+            else fuccess(List(Event.Reload))
           }
         }
       }
@@ -280,8 +279,8 @@ final private[round] class RoundAsyncActor(
       handle(playerId) { pov =>
         (pov.game.forceDrawable && !pov.game.hasAi && pov.game.hasClock && !pov.isMyTurn) ?? {
           getPlayer(!pov.color).isLongGone flatMap {
-            case true => finisher.rageQuit(pov.game, None)
-            case _    => fuccess(List(Event.Reload))
+            if _ then finisher.rageQuit(pov.game, None)
+            else fuccess(List(Event.Reload))
           }
         }
       }

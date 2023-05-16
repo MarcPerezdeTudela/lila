@@ -7,7 +7,6 @@ import lila.common.config.*
 import lila.db.dsl.Coll
 
 @Module
-@annotation.nowarn("msg=unused")
 final class Env(
     db: lila.db.Db,
     userRepo: lila.user.UserRepo,
@@ -17,7 +16,6 @@ final class Env(
     relationApi: lila.relation.RelationApi,
     captcher: lila.hub.actors.Captcher,
     cacheApi: lila.memo.CacheApi,
-    settingStore: lila.memo.SettingStore.Builder,
     net: NetConfig
 )(using
     ec: Executor,
@@ -45,9 +43,20 @@ final class Env(
   val viewCounter = wire[UblogViewCounter]
 
   val lastPostsCache: AsyncLoadingCache[Unit, List[UblogPost.PreviewPost]] =
-    cacheApi.unit[List[UblogPost.PreviewPost]](_.refreshAfterWrite(10 seconds).buildAsyncFuture { _ =>
-      api.latestPosts(2)
-    })
+    cacheApi.unit[List[UblogPost.PreviewPost]]:
+      _.refreshAfterWrite(10 seconds).buildAsyncFuture: _ =>
+        import ornicar.scalalib.ThreadLocalRandom
+        val lookInto = 5
+        val keep     = 2
+        api
+          .latestPosts(lookInto)
+          .map:
+            _.zipWithIndex
+              .map: (post, i) =>
+                (post, ThreadLocalRandom.nextInt(10 * (lookInto - i)))
+              .sortBy(_._2)
+              .take(keep)
+              .map(_._1)
 
   lila.common.Bus.subscribeFun("shadowban") { case lila.hub.actorApi.mod.Shadowban(userId, v) =>
     api.setShadowban(userId, v) >>

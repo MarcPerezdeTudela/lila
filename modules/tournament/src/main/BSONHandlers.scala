@@ -1,6 +1,5 @@
 package lila.tournament
 
-import chess.Clock.{ Config as ClockConfig }
 import chess.format.Fen
 import chess.Mode
 import chess.variant.Variant
@@ -10,7 +9,6 @@ import lila.db.BSON
 import lila.db.dsl.{ *, given }
 import lila.rating.PerfType
 import lila.user.User.lichessId
-import lila.gathering.Condition
 
 object BSONHandlers:
 
@@ -47,7 +45,6 @@ object BSONHandlers:
     r => (r.value * 100_000).toInt
   )
 
-  import lila.gathering.ConditionHandlers.BSONHandlers.given
   import TournamentCondition.bsonHandler
 
   given tourHandler: BSON[Tournament] with
@@ -157,8 +154,8 @@ object BSONHandlers:
         user1 = user1,
         user2 = user2,
         winner = r boolO "w" map {
-          case true => user1
-          case _    => user2
+          if _ then user1
+          else user2
         },
         turns = r intO "t",
         berserk1 = r.intO("b1").fold(r.boolD("b1"))(1 ==), // it used to be int = 0/1
